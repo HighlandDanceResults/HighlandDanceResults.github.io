@@ -55,7 +55,7 @@ navbar = html.Div(dbc.Card(dbc.CardHeader(html.Center(html.H1("Unofficial Highla
 dropdown_labels = list(df['Year'].unique())
 
 top_card = [
-    dbc.CardHeader(html.B("Test Header")),
+    dbc.CardHeader(html.B("Select Data")),
     dbc.CardBody([
         dbc.Row([
             dbc.Col([
@@ -180,20 +180,29 @@ def update_table(n_clicks, year_chosen, comp_chosen, age_chosen):
     comp_df = year_df[year_df['Competition'] == comp_chosen]
     df_chosen = comp_df[comp_df['Age Group'] == age_chosen]
 
-    table_card = [
-            dash_table.DataTable(
-                id = 'df_chosen',
-                data = df_chosen.to_dict('records'),
-                sort_action = 'custom',
-                columns=[{'name': column, 'id':column} for i, column in enumerate(df_chosen.columns)],
-                style_data_conditional = DATA_TABLE_STYLE.get("style_data_conditional"),
-                style_header=DATA_TABLE_STYLE.get("style_header"),
-                style_cell = {'textAlign': 'center'},
-            )
-    ]
+    df_chosen = df_chosen.dropna(axis=1, how='all')
 
-    y = df_chosen[['Fling', 'Sword', 'Seann Truibhas', 'Reel']].values
-    x = ['Fling', 'Sword', 'Seann Truibhas', 'Reel']
+    table_card = html.Div([
+        dash_table.DataTable(
+            id = 'df_chosen',
+            data = df_chosen.to_dict('records'),
+            sort_action = 'custom',
+            columns=[{'name': column, 'id':column} for i, column in enumerate(df_chosen.columns)],
+            style_data_conditional = DATA_TABLE_STYLE.get("style_data_conditional"),
+            style_header=DATA_TABLE_STYLE.get("style_header"),
+            style_cell = {'textAlign': 'center'},
+        )
+    ])
+
+    
+
+    # y = df_chosen[['Fling', 'Sword', 'Seann Truibhas', 'Reel']].values
+    # x = ['Fling', 'Sword', 'Seann Truibhas', 'Reel']
+
+
+    drop_list = ['Competition', 'Year', 'Age Group', 'Number', 'Name', 'Overall']
+    x = list(df_chosen.drop(drop_list, axis=1, errors = 'ignore').columns)
+    y = df_chosen[x].values
 
     fig = go.Figure(
         data=[go.Scatter(x = x, y = yi, name = df_chosen['Name'].iloc[i]) for i,yi in enumerate(y)]
