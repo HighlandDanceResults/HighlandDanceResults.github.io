@@ -42,10 +42,6 @@ DATA_TABLE_STYLE = {
     }
 }
 
-# dropdown_labels = []
-# for file in os.listdir('/Users/ewood/Documents/GitHub/dance_website/emilys_app/data'):
-#     dropdown_labels.append(file)
-
 
 ### --- PAGE LAYOUT --- ###
 navbar = html.Div(dbc.Card(dbc.CardHeader(html.Center(html.H1("Unofficial Highland Dance Results")))),
