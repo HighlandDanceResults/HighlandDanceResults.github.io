@@ -4,7 +4,7 @@ from dash.dependencies import Input, Output, ClientsideFunction
 import numpy as np
 
 # Initialize the Dash app
-app = dash.Dash(__name__, assets_external_path='https://highlanddanceresults.github.io/results/assets')
+app = dash.Dash(__name__)
 
 # Sample data
 categories = ['A', 'B', 'C', 'D']
