@@ -18,12 +18,12 @@ run_app:
 
 	mv 127.0.0.1:8050 pages_files
 
-	find pages_files -exec sed -i.bak 's|_dash-component-suites|results\\/_dash-component-suites|g' {} \;
-	find pages_files -exec sed -i.bak 's|_dash-layout|results\\/_dash-layout.json|g' {} \;
-	find pages_files -exec sed -i.bak 's|_dash-dependencies|results\\/_dash-dependencies.json|g' {} \;
-	find pages_files -exec sed -i.bak 's|_reload-hash|results\\/_reload-hash|g' {} \;
-	find pages_files -exec sed -i.bak 's|_dash-update-component|results\\/_dash-update-component|g' {} \;
-	find pages_files -exec sed -i.bak 's|assets|results\\/assets|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-component-suites|/_dash-component-suites|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-layout|/_dash-layout.json|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-dependencies|/_dash-dependencies.json|g' {} \;
+	find pages_files -exec sed -i.bak 's|_reload-hash|/_reload-hash|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-update-component|/_dash-update-component|g' {} \;
+	find pages_files -exec sed -i.bak 's|assets|/assets|g' {} \;
 
 
 
