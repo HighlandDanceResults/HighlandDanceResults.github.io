@@ -18,12 +18,12 @@ run_app:
 
 	mv 127.0.0.1:8050 pages_files
 
-	find pages_files -exec sed -i.bak 's|_dash-component-suites|HighlandDanceResults.github.io\\/_dash-component-suites|g' {} \;
-	find pages_files -exec sed -i.bak 's|_dash-layout|HighlandDanceResults.github.io/_dash-layout.json|g' {} \;
-	find pages_files -exec sed -i.bak 's|_dash-dependencies|HighlandDanceResults.github.io/_dash-dependencies.json|g' {} \;
-	find pages_files -exec sed -i.bak 's|_reload-hash|HighlandDanceResults.github.io/_reload-hash|g' {} \;
-	find pages_files -exec sed -i.bak 's|_dash-update-component|HighlandDanceResults.github.io/_dash-update-component|g' {} \;
-	find pages_files -exec sed -i.bak 's|assets|HighlandDanceResults.github.io/assets|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-component-suites|website\\/_dash-component-suites|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-layout|website/_dash-layout.json|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-dependencies|website/_dash-dependencies.json|g' {} \;
+	find pages_files -exec sed -i.bak 's|_reload-hash|website/_reload-hash|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-update-component|website/_dash-update-component|g' {} \;
+	find pages_files -exec sed -i.bak 's|assets|website/assets|g' {} \;
 
 	mv pages_files/_dash-layout pages_files/_dash-layout.json
 	mv pages_files/_dash-dependencies pages_files/_dash-dependencies.json
