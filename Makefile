@@ -30,7 +30,7 @@ run_app:
 	mv pages_files/_dash-dependencies pages_files/_dash-dependencies.json
 	# mv assets/* pages_files/assets/
 
-	kill $(ps -C | grep 'python' |awk '{print $1}')
+	ps -C | grep 'python' | grep -v grep | awk '{print $1}' | xargs kill
 
 clean_dirs:
 	ls
