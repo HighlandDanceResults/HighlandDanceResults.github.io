@@ -1,8 +1,14 @@
-import dash
-from dash import dcc, html
-from dash.dependencies import Input, Output, ClientsideFunction
+from dash import Dash, dash_table, dcc, html, Input, Output, callback, State
+from dash.exceptions import PreventUpdate
 import numpy as np
+import pandas as pd
+from collections import OrderedDict
 import dash_bootstrap_components as dbc
+from dash import html
+import plotly.graph_objs as go
+import plotly.express as px
+import os
+import dash_bootstrap_templates 
 
 # Initialize the Dash app
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
