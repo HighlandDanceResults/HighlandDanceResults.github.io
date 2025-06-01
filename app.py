@@ -1,6 +1,6 @@
 import dash
 from dash import dcc, html
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, ClientsideFunction
 import numpy as np
 
 # Initialize the Dash app
@@ -27,42 +27,71 @@ app.layout = html.Div([
     dcc.Store(id='bar-data', data={'categories': categories, 'values1': list(values1), 'values2': list(values2)})
 ])
 
-# Client-side callback (JavaScript function)
+# # Client-side callback (JavaScript function)
+# app.clientside_callback(
+#     """
+#     function(chartType, data) {
+#         var categories = data.categories;
+#         var values1 = data.values1;
+#         var values2 = data.values2;
+
+#         var barmode = chartType === 'stack' ? 'stack' : 'group';
+
+#         return {
+#             'data': [
+#                 {
+#                     'x': categories,
+#                     'y': values1,
+#                     'type': 'bar',
+#                     'name': 'Series 1'
+#                 },
+#                 {
+#                     'x': categories,
+#                     'y': values2,
+#                     'type': 'bar',
+#                     'name': 'Series 2'
+#                 }
+#             ],
+#             'layout': {
+#                 'title': `Bar Chart (${chartType === 'stack' ? 'Stacked' : 'Grouped'})`,
+#                 'barmode': barmode
+#             }
+#         };
+#     }
+#     """,
+#     Output('bar-chart', 'figure'),
+#     [Input('chart-type-dropdown', 'value')],
+#     [Input('bar-data', 'data')]
+# )
+
 app.clientside_callback(
-    """
-    function(chartType, data) {
-        var categories = data.categories;
-        var values1 = data.values1;
-        var values2 = data.values2;
-
-        var barmode = chartType === 'stack' ? 'stack' : 'group';
-
-        return {
-            'data': [
-                {
-                    'x': categories,
-                    'y': values1,
-                    'type': 'bar',
-                    'name': 'Series 1'
-                },
-                {
-                    'x': categories,
-                    'y': values2,
-                    'type': 'bar',
-                    'name': 'Series 2'
-                }
-            ],
-            'layout': {
-                'title': `Bar Chart (${chartType === 'stack' ? 'Stacked' : 'Grouped'})`,
-                'barmode': barmode
-            }
-        };
-    }
-    """,
-    Output('bar-chart', 'figure'),
-    [Input('chart-type-dropdown', 'value')],
-    [Input('bar-data', 'data')]
+    ClientsideFunction(
+        namespace='test_namespace',
+        function_name='test_function'
+    ),
+    output=Output('bar-chart', 'figure'),
+    inputs=[
+        Input('chart-type-dropdown', 'value'),
+        Input('bar-data', 'data')
+    ]
 )
+
+# app.clientside_callback(
+#     ClientsideFunction(
+#         namespace='clientside3',
+#         function_name='update_table'
+#     ),
+#     output=Output('table', 'selected_rows'),
+#     inputs=[
+#         Input('map', 'clickData'),
+#         Input('map', 'selectedData'),
+#         Input('table', 'data')
+#         ],
+#     state=[State('table', 'selected_rows'),
+#            State('store', 'data')],
+#     )
+
+
 
 # Run the app
 if __name__ == '__main__':
