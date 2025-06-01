@@ -14,7 +14,7 @@ import plotly.express as px
 import os
 import dash_bootstrap_templates 
 
-data = pd.read_csv('/Users/ewood/Documents/GitHub/dance_website/data/test_all_new.csv', keep_default_na=False)
+data = pd.read_csv('./data/test_all_new.csv', keep_default_na=False)
 df = pd.DataFrame(data)
 df.drop(df.columns[df.columns.str.contains('unnamed', case=False)], axis=1, inplace=True)
 df = df.replace('', np.NaN)
