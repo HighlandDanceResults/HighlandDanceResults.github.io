@@ -18,20 +18,13 @@ run_app:
 
 	mv 127.0.0.1:8050 pages_files
 
-	# find pages_files -exec sed -i.bak 's|_dash-component-suites|/_dash-component-suites|g' {} \;
-	# find pages_files -exec sed -i.bak 's|_dash-layout|/_dash-layout.json|g' {} \;
-	# find pages_files -exec sed -i.bak 's|_dash-dependencies|/_dash-dependencies.json|g' {} \;
-	# find pages_files -exec sed -i.bak 's|_reload-hash|/_reload-hash|g' {} \;
-	# find pages_files -exec sed -i.bak 's|_dash-update-component|/_dash-update-component|g' {} \;
-	# find pages_files -exec sed -i.bak 's|assets|/assets|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-component-suites|results/_dash-component-suites|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-layout|results/_dash-layout.json|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-dependencies|results/_dash-dependencies.json|g' {} \;
+	find pages_files -exec sed -i.bak 's|_reload-hash|results/_reload-hash|g' {} \;
+	find pages_files -exec sed -i.bak 's|_dash-update-component|results/_dash-update-component|g' {} \;
+	find pages_files -exec sed -i.bak 's|assets|results/assets|g' {} \;
 
-	sed -i 's/_dash-layout/_dash-layout.json/g' 127.0.0.1:8050/_dash-component-suites/dash_renderer/*.js 
-	sed -i 's/_dash-dependencies/_dash-dependencies.json/g' 127.0.0.1:8050/_dash-component-suites/dash_renderer/*.js
-	mv 127.0.0.1:8050/_dash-layout 127.0.0.1:8050/_dash-layout.json	
-	mv 127.0.0.1:8050/_dash-dependencies 127.0.0.1:8050/_dash-dependencies.json
-	cp assets/* 127.0.0.1:8050/assets/
-	mv pages_files/_dash-layout pages_files/_dash-layout.json
-	mv pages_files/_dash-dependencies pages_files/_dash-dependencies.json
 
 	ps | grep python | awk '{print $$1}' | xargs kill -9	
 
