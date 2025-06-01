@@ -114,7 +114,7 @@ cards = dbc.Container(
 
 
 app.layout = html.Div([
-    # dcc.Store(id = 'df_chosen'),
+    dcc.Store(id = 'df', data=df),
     navbar,
     cards
 ])
@@ -123,6 +123,7 @@ app.layout = html.Div([
 @app.callback(
     Output('comp_dropdown', 'options', allow_duplicate=True),
     Input('year_dropdown', 'value'),
+    State('df', 'data'),
     prevent_initial_call=True,
 )
 def update_comp_values(year_chosen):
