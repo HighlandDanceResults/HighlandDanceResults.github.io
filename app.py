@@ -28,53 +28,53 @@ app.layout = html.Div([
 ])
 
 # Client-side callback (JavaScript function)
-# app.clientside_callback(
-#     """
-#     function(chartType, data) {
-#         var categories = data.categories;
-#         var values1 = data.values1;
-#         var values2 = data.values2;
-
-#         var barmode = chartType === 'stack' ? 'stack' : 'group';
-
-#         return {
-#             'data': [
-#                 {
-#                     'x': categories,
-#                     'y': values1,
-#                     'type': 'bar',
-#                     'name': 'Series 1'
-#                 },
-#                 {
-#                     'x': categories,
-#                     'y': values2,
-#                     'type': 'bar',
-#                     'name': 'Series 2'
-#                 }
-#             ],
-#             'layout': {
-#                 'title': `Bar Chart (${chartType === 'stack' ? 'Stacked' : 'Grouped'})`,
-#                 'barmode': barmode
-#             }
-#         };
-#     }
-#     """,
-#     Output('bar-chart', 'figure'),
-#     [Input('chart-type-dropdown', 'value')],
-#     [Input('bar-data', 'data')]
-# )
-
 app.clientside_callback(
-    ClientsideFunction(
-        namespace='test_namespace',
-        function_name='test_function'
-    ),
-    output=Output('bar-chart', 'figure'),
-    inputs=[
-        Input('chart-type-dropdown', 'value'),
-        Input('bar-data', 'data')
-    ]
+    """
+    function(chartType, data) {
+        var categories = data.categories;
+        var values1 = data.values1;
+        var values2 = data.values2;
+
+        var barmode = chartType === 'stack' ? 'stack' : 'group';
+
+        return {
+            'data': [
+                {
+                    'x': categories,
+                    'y': values1,
+                    'type': 'bar',
+                    'name': 'Series 1'
+                },
+                {
+                    'x': categories,
+                    'y': values2,
+                    'type': 'bar',
+                    'name': 'Series 2'
+                }
+            ],
+            'layout': {
+                'title': `Bar Chart (${chartType === 'stack' ? 'Stacked' : 'Grouped'})`,
+                'barmode': barmode
+            }
+        };
+    }
+    """,
+    Output('bar-chart', 'figure'),
+    [Input('chart-type-dropdown', 'value')],
+    [Input('bar-data', 'data')]
 )
+
+# app.clientside_callback(
+#     ClientsideFunction(
+#         namespace='test_namespace',
+#         function_name='test_function'
+#     ),
+#     output=Output('bar-chart', 'figure'),
+#     inputs=[
+#         Input('chart-type-dropdown', 'value'),
+#         Input('bar-data', 'data')
+#     ]
+# )
 
 # app.clientside_callback(
 #     ClientsideFunction(
