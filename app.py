@@ -114,55 +114,42 @@ cards = dbc.Container(
 
 
 app.layout = html.Div([
-    dcc.Store(id = 'df', data=df),
+    dcc.Store(id='df_store', data=df.to_dict('records')),
     navbar,
     cards
 ])
 
 ### --- POPULATING DROP DOWNS --- ###
-@app.callback(
+# Populate Competition based on Year
+app.clientside_callback(
+    """
+    function(year, df) {
+        if (!year || !df) return [];
+        const comps = [...new Set(df.filter(row => row.Year == year).map(row => row.Competition))];
+        return comps.map(comp => ({ label: comp, value: comp }));
+    }
+    """,
     Output('comp_dropdown', 'options', allow_duplicate=True),
     Input('year_dropdown', 'value'),
-    State('df', 'data'),
-    prevent_initial_call=True,
+    State('df_store', 'data'),
+    prevent_initial_call=True
 )
-def update_comp_values(year_chosen):
-    if year_chosen == None:
-        PreventUpdate
-    
-    year_df = df[df['Year'] == year_chosen]
 
-    available_comps = list(year_df['Competition'].unique())
-    return available_comps
-
-
-@app.callback(
+# Populate Age Group based on Competition and Year
+app.clientside_callback(
+    """
+    function(comp, year, df) {
+        if (!comp || !year || !df) return [];
+        const ages = [...new Set(df.filter(row => row.Year == year && row.Competition == comp).map(row => row["Age Group"]))];
+        return ages.map(age => ({ label: age, value: age }));
+    }
+    """,
     Output('age_dropdown', 'options', allow_duplicate=True),
     Input('comp_dropdown', 'value'),
     State('year_dropdown', 'value'),
+    State('df_store', 'data'),
     prevent_initial_call=True
 )
-def update_age_values(comp_chosen, year_chosen):
-    if comp_chosen == None:
-        PreventUpdate
-
-    year_df = df[df['Year'] == year_chosen]
-    comp_df = year_df[year_df['Competition'] == comp_chosen]
-    available_ages = list(comp_df['Age Group'].unique())
-
-    return available_ages
-
-
-
-### --- RESET TABLE --- ###
-@app.callback(
-    Output('table_card', 'children', allow_duplicate=True),
-    Input('reset-btn', 'n_clicks'),
-    prevent_initial_call=True
-)
-def update_table(n_clicks):
-    return 'Please select options first...'
-
 
 
 
