@@ -4,7 +4,7 @@ from dash.dependencies import Input, Output, ClientsideFunction
 import numpy as np
 
 # Initialize the Dash app
-app = dash.Dash(__name__, assets_url_path='https://highlanddanceresults.github.io/results/assets')
+app = dash.Dash(__name__)
 
 # Sample data
 categories = ['A', 'B', 'C', 'D']
@@ -27,54 +27,54 @@ app.layout = html.Div([
     dcc.Store(id='bar-data', data={'categories': categories, 'values1': list(values1), 'values2': list(values2)})
 ])
 
-# # Client-side callback (JavaScript function)
-# app.clientside_callback(
-#     """
-#     function(chartType, data) {
-#         var categories = data.categories;
-#         var values1 = data.values1;
-#         var values2 = data.values2;
-
-#         var barmode = chartType === 'stack' ? 'stack' : 'group';
-
-#         return {
-#             'data': [
-#                 {
-#                     'x': categories,
-#                     'y': values1,
-#                     'type': 'bar',
-#                     'name': 'Series 1'
-#                 },
-#                 {
-#                     'x': categories,
-#                     'y': values2,
-#                     'type': 'bar',
-#                     'name': 'Series 2'
-#                 }
-#             ],
-#             'layout': {
-#                 'title': `Bar Chart (${chartType === 'stack' ? 'Stacked' : 'Grouped'})`,
-#                 'barmode': barmode
-#             }
-#         };
-#     }
-#     """,
-#     Output('bar-chart', 'figure'),
-#     [Input('chart-type-dropdown', 'value')],
-#     [Input('bar-data', 'data')]
-# )
-
+# Client-side callback (JavaScript function)
 app.clientside_callback(
-    ClientsideFunction(
-        namespace='test_namespace',
-        function_name='test_function'
-    ),
-    output=Output('bar-chart', 'figure'),
-    inputs=[
-        Input('chart-type-dropdown', 'value'),
-        Input('bar-data', 'data')
-    ]
+    """
+    function(chartType, data) {
+        var categories = data.categories;
+        var values1 = data.values1;
+        var values2 = data.values2;
+
+        var barmode = chartType === 'stack' ? 'stack' : 'group';
+
+        return {
+            'data': [
+                {
+                    'x': categories,
+                    'y': values1,
+                    'type': 'bar',
+                    'name': 'Series 1'
+                },
+                {
+                    'x': categories,
+                    'y': values2,
+                    'type': 'bar',
+                    'name': 'Series 2'
+                }
+            ],
+            'layout': {
+                'title': `Bar Chart (${chartType === 'stack' ? 'Stacked' : 'Grouped'})`,
+                'barmode': barmode
+            }
+        };
+    }
+    """,
+    Output('bar-chart', 'figure'),
+    [Input('chart-type-dropdown', 'value')],
+    [Input('bar-data', 'data')]
 )
+
+# app.clientside_callback(
+#     ClientsideFunction(
+#         namespace='test_namespace',
+#         function_name='test_function'
+#     ),
+#     output=Output('bar-chart', 'figure'),
+#     inputs=[
+#         Input('chart-type-dropdown', 'value'),
+#         Input('bar-data', 'data')
+#     ]
+# )
 
 # app.clientside_callback(
 #     ClientsideFunction(
