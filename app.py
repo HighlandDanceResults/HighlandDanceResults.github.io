@@ -4,7 +4,7 @@ from dash.dependencies import Input, Output, ClientsideFunction
 import numpy as np
 
 # Initialize the Dash app
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, requests_pathname_prefix = 'https://highlanddanceresults.github.io/results/')
 
 # Sample data
 categories = ['A', 'B', 'C', 'D']
