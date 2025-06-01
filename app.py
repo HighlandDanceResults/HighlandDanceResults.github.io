@@ -1,3 +1,7 @@
+# NOTES
+# bootstrap-grid.css needed for card view
+# 
+
 from dash import Dash, dash_table, dcc, html, Input, Output, callback, State
 from dash.exceptions import PreventUpdate
 import numpy as np
@@ -10,18 +14,14 @@ import plotly.express as px
 import os
 import dash_bootstrap_templates 
 
-# Initialize the Dash app
-app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
-
-# Sample data
-categories = ['A', 'B', 'C', 'D']
-values1 = np.random.randint(10, 100, size=4)
-values2 = np.random.randint(10, 100, size=4)
-
 data = pd.read_csv('/Users/ewood/Documents/GitHub/dance_website/emilys_app/data/test_all_new.csv', keep_default_na=False)
 df = pd.DataFrame(data)
 df.drop(df.columns[df.columns.str.contains('unnamed', case=False)], axis=1, inplace=True)
 df = df.replace('', np.NaN)
+
+
+
+app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 DATA_TABLE_STYLE = {
     "style_data_conditional": [
@@ -41,6 +41,11 @@ DATA_TABLE_STYLE = {
         "fontWeight": "bold",
     }
 }
+
+# dropdown_labels = []
+# for file in os.listdir('/Users/ewood/Documents/GitHub/dance_website/emilys_app/data'):
+#     dropdown_labels.append(file)
+
 
 ### --- PAGE LAYOUT --- ###
 navbar = html.Div(dbc.Card(dbc.CardHeader(html.Center(html.H1("Unofficial Highland Dance Results")))),
@@ -114,7 +119,48 @@ app.layout = html.Div([
     cards
 ])
 
+### --- POPULATING DROP DOWNS --- ###
+@app.callback(
+    Output('comp_dropdown', 'options', allow_duplicate=True),
+    Input('year_dropdown', 'value'),
+    prevent_initial_call=True,
+)
+def update_comp_values(year_chosen):
+    if year_chosen == None:
+        PreventUpdate
+    
+    year_df = df[df['Year'] == year_chosen]
 
+    available_comps = list(year_df['Competition'].unique())
+    return available_comps
+
+
+@app.callback(
+    Output('age_dropdown', 'options', allow_duplicate=True),
+    Input('comp_dropdown', 'value'),
+    State('year_dropdown', 'value'),
+    prevent_initial_call=True
+)
+def update_age_values(comp_chosen, year_chosen):
+    if comp_chosen == None:
+        PreventUpdate
+
+    year_df = df[df['Year'] == year_chosen]
+    comp_df = year_df[year_df['Competition'] == comp_chosen]
+    available_ages = list(comp_df['Age Group'].unique())
+
+    return available_ages
+
+
+
+### --- RESET TABLE --- ###
+@app.callback(
+    Output('table_card', 'children', allow_duplicate=True),
+    Input('reset-btn', 'n_clicks'),
+    prevent_initial_call=True
+)
+def update_table(n_clicks):
+    return 'Please select options first...'
 
 
 
