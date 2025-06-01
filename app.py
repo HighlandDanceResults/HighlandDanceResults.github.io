@@ -11,7 +11,7 @@ import os
 import dash_bootstrap_templates 
 
 # Initialize the Dash app
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Sample data
 categories = ['A', 'B', 'C', 'D']
