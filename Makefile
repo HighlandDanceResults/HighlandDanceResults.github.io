@@ -28,7 +28,6 @@ run_app:
 	mv pages_files/_dash-layout pages_files/_dash-layout.json
 	mv pages_files/_dash-dependencies pages_files/_dash-dependencies.json
 
-
 	ps | grep python | awk '{print $$1}' | xargs kill -9	
 
 clean_dirs:
