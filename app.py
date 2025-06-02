@@ -82,7 +82,7 @@ top_card = [
             dbc.Col([
                 html.P("2) Choose Competition"),
                 dcc.Dropdown('', id= 'comp_dropdown', searchable=False,
-                             optionHeight=50
+                             optionHeight=50, style = {'white-space': 'nowrap', 'position': 'initial'}
                 )
             ]),
             dbc.Col([
