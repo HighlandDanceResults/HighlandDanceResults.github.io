@@ -89,7 +89,8 @@ cards = dbc.Container(
             dbc.Card([
                 dbc.CardHeader("Results"),
                 dbc.CardBody([
-                    'Please select options first...'
+                    'Please select options first...',
+                    dcc.Graph(id = 'graph')
                     # dbc.Row(table_card),
                     # dbc.Row(plot_card)
                 ],id = 'table_card')
@@ -101,8 +102,7 @@ cards = dbc.Container(
                 dbc.CardBody([
                     'Email us with results, questions, or concerns at highlanddanceresults@gmail.com'
                 ],id = 'contact_card')
-            ], style = {"margin-bottom": "0.5em"})
-            
+            ], style= {"padding": "0px", "margin-bottom": "0.5em"}),
         )
     ])
 , fluid=True, style= {"height": "80vh"})
@@ -147,89 +147,55 @@ app.clientside_callback(
     prevent_initial_call=True
 )
 
+# table card
+app.clientside_callback(
+    """
+    function(n_clicks, year, comp, age, df) {
+        if (n_clicks < 1) return [];
 
+        const drop_list = ["Competition", "Year", "Age Group", "Number", "Overall"];
 
+        const df_chosen = df.filter(row => row.Year == year && row.Competition == comp && row["Age Group"] == age);
 
+        var dance_to_placings = df_chosen.map(function(row) {
+            const newRow = {};
+            for (const key in row) {
+                if (!drop_list.includes(key)) {
+                    newRow[key] = row[key];
+                }
+            }
+            return newRow;
+        });
 
-# # App layout
-# app.layout = html.Div([
-#     dcc.Graph(id='bar-chart'),
-#     dcc.Dropdown(
-#         id='chart-type-dropdown',
-#         options=[
-#             {'label': 'Grouped', 'value': 'group'},
-#             {'label': 'Stacked', 'value': 'stack'}
-#         ],
-#         value='group',  # Default value
-#         clearable=False,
-#         style={'width': '50%'}
-#     ),
-#     dcc.Store(id='bar-data', data={'categories': categories, 'values1': list(values1), 'values2': list(values2)})
-# ])
+        const chosen_dances = Array.from(new Set(dance_to_placings.flatMap(obj => Object.keys(obj))));
+        const placings = dance_to_placings.map(obj => chosen_dances.map(key => obj[key]));
 
-# Client-side callback (JavaScript function)
-# app.clientside_callback(
-#     """
-#     function(chartType, data) {
-#         var categories = data.categories;
-#         var values1 = data.values1;
-#         var values2 = data.values2;
+        var figure_data = [];
+        for (let i = 0; i < df_chosen.length; i++) {
+            figure_data.push(
+                {'name': placings[i][0],
+                'x': chosen_dances.slice(1),
+                'y': placings[i].slice(1),
+                'type': 'scatter'}
+            );
 
-#         var barmode = chartType === 'stack' ? 'stack' : 'group';
+        };
 
-#         return {
-#             'data': [
-#                 {
-#                     'x': categories,
-#                     'y': values1,
-#                     'type': 'bar',
-#                     'name': 'Series 1'
-#                 },
-#                 {
-#                     'x': categories,
-#                     'y': values2,
-#                     'type': 'bar',
-#                     'name': 'Series 2'
-#                 }
-#             ],
-#             'layout': {
-#                 'title': `Bar Chart (${chartType === 'stack' ? 'Stacked' : 'Grouped'})`,
-#                 'barmode': barmode
-#             }
-#         };
-#     }
-#     """,
-#     Output('bar-chart', 'figure'),
-#     [Input('chart-type-dropdown', 'value')],
-#     [Input('bar-data', 'data')]
-# )
-
-# app.clientside_callback(
-#     ClientsideFunction(
-#         namespace='test_namespace',
-#         function_name='test_function'
-#     ),
-#     output=Output('bar-chart', 'figure'),
-#     inputs=[
-#         Input('chart-type-dropdown', 'value'),
-#         Input('bar-data', 'data')
-#     ]
-# )
-
-# app.clientside_callback(
-#     ClientsideFunction(
-#         namespace='clientside3',
-#         function_name='update_table'
-#     ),
-#     output=Output('table', 'selected_rows'),
-#     inputs=[
-#         Input('map', 'clickData'),
-#         Input('map', 'selectedData'),
-#         Input('table', 'data')
-#         ],
-#     state=[State('table', 'selected_rows'),
-#            State('store', 'data')],
-#     )
+        const data = {
+            'data': figure_data
+        }
+        
+        return data;
+    }
+    """,
+    Output('graph', 'figure', allow_duplicate=True),
+    Input('submit-btn', 'n_clicks'),
+    State('year_dropdown', 'value'),
+    State('comp_dropdown', 'value'),
+    State('age_dropdown', 'value'),
+    State('df_store', 'data'),
+    prevent_initial_call=True
+)
 
 
 
