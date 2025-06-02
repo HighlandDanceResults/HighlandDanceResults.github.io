@@ -44,7 +44,11 @@ DATA_TABLE_STYLE = {
 
 
 ### --- PAGE LAYOUT --- ###
-navbar = html.Div(dbc.Card(dbc.CardHeader(html.Center(html.H1("Unofficial Highland Dance Results")))),
+navbar = html.Div(dbc.Card([
+    dbc.CardHeader(
+        html.Center(dcc.Markdown('''# Unofficial Highland Dance Results'''))
+        ),
+    ]),
                   style = {"margin-bottom": "0.3em"})
 
 
@@ -52,6 +56,14 @@ dropdown_labels = list(df['Year'].unique())
 
 top_card = [
     dbc.CardHeader(html.B("Select Data")),
+    dbc.CardBody([
+        dcc.Markdown('''
+            Notes:
+            * Turn phone sideways for best use with phones
+            * Select year, competition, and age then click "Submit"
+            * Checkout scotdance.app! This originated as a passion project because some comps do not use the app
+            ''')
+    ]),
     dbc.CardBody([
         dbc.Row([
             dbc.Col([
@@ -87,13 +99,15 @@ cards = dbc.Container(
                 , style = {"margin-bottom": "0.5em"}),
         dbc.Row(
             dbc.Card([
-                dbc.CardHeader(html.B("Results - Select Data First")),
+                dbc.CardHeader(html.B("Results")),
                 dbc.CardBody([
+                    dcc.Markdown('''Please select year, competition, and age group first.''', id = 'data-markdown'),
                     dash_table.DataTable(id = 'table',
                         sort_action = 'native',
                         style_data_conditional = DATA_TABLE_STYLE.get("style_data_conditional"),
                         style_header=DATA_TABLE_STYLE.get("style_header"),
                         style_cell = {'textAlign': 'center'},
+                        style_table={'overflowX': 'auto'},
                                          ),
                     dcc.Graph(id = 'graph',
                         figure={
@@ -112,7 +126,7 @@ cards = dbc.Container(
             dbc.Card([
                 dbc.CardHeader("Contact Us :)"),
                 dbc.CardBody([
-                    'Email us with results, questions, or concerns at highlanddanceresults@gmail.com'
+                    'Email me with results or corrections at highlanddanceresults@gmail.com'
                 ],id = 'contact_card')
             ], style= {"padding": "0px", "margin-bottom": "0.5em"}),
         )
@@ -208,19 +222,19 @@ app.clientside_callback(
         const graph_data = {
             'data': figure_data,
             'layout': {
-                'title': 'Results for ' + year + ' '+ comp + ' ' +age,
                 'yaxis': {autorange: 'reversed'}
             }
         };
 
-
+        data_markdown = 'Results for ' + year + ' '+ comp + ' ' +age+':';
         
-        return [graph_data, table_data, df_chosen];
+        return [graph_data, table_data, df_chosen, '#### '+data_markdown];
     }
     """,
     Output('graph', 'figure', allow_duplicate=True),
     Output('table', 'data', allow_duplicate=True),
     Output('df_chosen', 'data', allow_duplicate=True),
+    Output('data-markdown', 'children', allow_duplicate=True),
     Input('submit-btn', 'n_clicks'),
     State('year_dropdown', 'value'),
     State('comp_dropdown', 'value'),
