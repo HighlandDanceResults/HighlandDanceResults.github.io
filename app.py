@@ -57,9 +57,7 @@ dropdown_labels = list(df['Year'].unique())
 top_card = [
     dbc.CardHeader(html.B("Select Data")),
     dbc.CardBody([
-        dcc.Markdown('''
-           Select the Year, Competition, and Age. Click "Submit" for results
-            
+        dcc.Markdown('''            
             Checkout scotdance.app! This originated as a passion project because some comps do not use the app
                      
 
@@ -77,15 +75,21 @@ top_card = [
         dbc.Row([
             dbc.Col([
                 html.P("1) Choose Year"),
-                dcc.Dropdown(dropdown_labels, id= 'year_dropdown', searchable=False)
+                dcc.Dropdown(dropdown_labels, id= 'year_dropdown', searchable=False,
+                             optionHeight=50
+                             )
             ]),
             dbc.Col([
                 html.P("2) Choose Competition"),
-                dcc.Dropdown('', id= 'comp_dropdown', searchable=False)
+                dcc.Dropdown('', id= 'comp_dropdown', searchable=False,
+                             optionHeight=50
+                )
             ]),
             dbc.Col([
                 html.P("3) Choose Age Group"),
-                dcc.Dropdown('', id= 'age_dropdown', searchable=False)
+                dcc.Dropdown('', id= 'age_dropdown', searchable=False,
+                             optionHeight=50
+                )
             ])
         ]),
         html.Br(),
