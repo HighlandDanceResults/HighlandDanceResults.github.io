@@ -75,7 +75,7 @@ top_card = [
                              )
             ]),
             dbc.Row([
-                dcc.Markdown('''**2) Choose Compeititon**'''),
+                dcc.Markdown('''**2) Choose Competition**'''),
                 dcc.Dropdown('', id= 'comp_dropdown', searchable=False,
                              optionHeight=50, style = {'white-space': 'nowrap', 'position': 'initial'}
                 )
