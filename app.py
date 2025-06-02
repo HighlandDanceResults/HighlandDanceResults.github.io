@@ -237,7 +237,7 @@ app.clientside_callback(
                 'legend': {'orientation': 'h',
                     'y':0,
                     'yanchor': "bottom",
-                    'yref': "container"}
+                    'yref': "container"},
                 'margin': {l:15, r:0}
                 
             }
