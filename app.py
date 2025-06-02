@@ -116,6 +116,7 @@ cards = dbc.Container(
                         style_header=DATA_TABLE_STYLE.get("style_header"),
                         style_cell = {'textAlign': 'center'},
                         style_table={'overflowX': 'auto'},
+                        fixed_columns={'headers': True, 'data': 1}
                                          ),
                     dcc.Graph(id = 'graph',
                         figure={
@@ -230,9 +231,11 @@ app.clientside_callback(
         const graph_data = {
             'data': figure_data,
             'layout': {
-                'yaxis': {autorange: 'reversed'},
+                'yaxis': {autorange: 'reversed',
+                    'side':'left'},
+                'xaxis': {'side': 'top',},
                 'legend': {'orientation': 'h'},
-                'margin': {l:0, r:0}
+                'margin': {l:15, r:0}
                 
             }
         };
