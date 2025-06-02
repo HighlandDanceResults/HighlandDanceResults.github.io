@@ -234,7 +234,10 @@ app.clientside_callback(
                 'yaxis': {autorange: 'reversed',
                     'side':'left'},
                 'xaxis': {'side': 'top',},
-                'legend': {'orientation': 'h'},
+                'legend': {'orientation': 'h',
+                    'y':0,
+                    'yanchor': "bottom",
+                    'yref': "container"}
                 'margin': {l:15, r:0}
                 
             }
