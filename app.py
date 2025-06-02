@@ -20,8 +20,13 @@ df.drop(df.columns[df.columns.str.contains('unnamed', case=False)], axis=1, inpl
 df = df.replace('', np.NaN)
 
 
-
-app = Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(__name__,
+           external_stylesheets=[dbc.themes.BOOTSTRAP],
+        #    assets_url_path='http://127.0.0.1:8050/assets',
+        #    assets_folder='/Users/ewood/Documents/GitHub/HighlandDanceResults.github.io/assets/',
+           title="Highland Dance Results",
+           prevent_initial_callbacks=True)
+print(app.config)
 
 DATA_TABLE_STYLE = {
     "style_data_conditional": [
@@ -62,7 +67,7 @@ top_card = [
                      
 
             ***For use with phones***:
-            * Turn phone sideways
+            * Best with phone turned sideways
             * Scroll left/right on table for more info
             * Sort table by clicking up/down arrows next to column titles
             * Click on graph points for more info
@@ -273,12 +278,16 @@ app.clientside_callback(
                 'ticks': '',
                 'zeroline': false}}};
 
-        return [[], empty_graph, []];
+        return [[], empty_graph, [], [], [], []];
     }
     """,
     Output('table', 'data', allow_duplicate=True),
     Output('graph', 'figure', allow_duplicate=True),
     Output('data-markdown', 'children', allow_duplicate=True),
+    Output('year_dropdown', 'value', allow_duplicate=True),
+    Output('comp_dropdown', 'value', allow_duplicate=True),
+    Output('age_dropdown', 'value', allow_duplicate=True),
+
     Input('reset-btn', 'n_clicks'),
     prevent_initial_call=True
 )
