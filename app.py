@@ -58,10 +58,19 @@ top_card = [
     dbc.CardHeader(html.B("Select Data")),
     dbc.CardBody([
         dcc.Markdown('''
-            Notes:
-            * Turn phone sideways for best use with phones
-            * Select year, competition, and age then click "Submit"
-            * Checkout scotdance.app! This originated as a passion project because some comps do not use the app
+           Select the Year, Competition, and Age. Click "Submit" for results
+            
+            Checkout scotdance.app! This originated as a passion project because some comps do not use the app
+                     
+
+            For use with phones:
+            * Turn phone sideways
+            * Scroll left/right on table for more info
+            * Sort table by clicking up/down arrows next to column titles
+            * Click on graph points for more info
+
+            
+
             ''')
     ]),
     dbc.CardBody([
