@@ -58,10 +58,10 @@ top_card = [
     dbc.CardHeader(html.B("Select Data")),
     dbc.CardBody([
         dcc.Markdown('''            
-            Checkout scotdance.app! This originated as a passion project because some comps do not use the app
+            Checkout [scotdance.app] (https://scotdance.app/#/competitions/), which also has a mobile app! My website originated as a passion project because some comps do not use the app.
                      
 
-            For use with phones:
+            ***For use with phones***:
             * Turn phone sideways
             * Scroll left/right on table for more info
             * Sort table by clicking up/down arrows next to column titles
@@ -74,19 +74,19 @@ top_card = [
     dbc.CardBody([
         dbc.Row([
             dbc.Col([
-                html.P("1) Choose Year"),
+                dcc.Markdown('''**1) Choose Year**'''),
                 dcc.Dropdown(dropdown_labels, id= 'year_dropdown', searchable=False,
                              optionHeight=50
                              )
             ]),
             dbc.Col([
-                html.P("2) Choose Competition"),
+                dcc.Markdown('''**2) Choose Compeititon**'''),
                 dcc.Dropdown('', id= 'comp_dropdown', searchable=False,
                              optionHeight=50, style = {'white-space': 'nowrap', 'position': 'initial'}
                 )
             ]),
             dbc.Col([
-                html.P("3) Choose Age Group"),
+                dcc.Markdown('''**3) Choose Age Group**'''),
                 dcc.Dropdown('', id= 'age_dropdown', searchable=False,
                              optionHeight=50
                 )
