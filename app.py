@@ -242,7 +242,9 @@ app.clientside_callback(
             * Scroll left/right on table for more info
             * Sort table by clicking up/down arrows next to column titles
             * Click on graph points for more info
-            ` + '#### '+ data_markdown
+
+            
+            ` + '**'+ data_markdown +'**'
         
         return [graph_data, table_data, df_chosen, data_markdown];
     }
