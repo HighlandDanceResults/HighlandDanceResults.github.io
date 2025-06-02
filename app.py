@@ -273,11 +273,12 @@ app.clientside_callback(
                 'ticks': '',
                 'zeroline': false}}};
 
-        return [[], empty_graph];
+        return [[], empty_graph, []];
     }
     """,
     Output('table', 'data', allow_duplicate=True),
     Output('graph', 'figure', allow_duplicate=True),
+    Output('data-markdown', 'children', allow_duplicate=True),
     Input('reset-btn', 'n_clicks'),
     prevent_initial_call=True
 )
