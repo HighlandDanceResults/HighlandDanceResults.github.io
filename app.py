@@ -23,7 +23,7 @@ df = df.replace('', np.NaN)
 app = Dash(__name__,
            external_stylesheets=[dbc.themes.BOOTSTRAP],
         #    assets_url_path='http://127.0.0.1:8050/assets',
-        #    assets_folder='/Users/ewood/Documents/GitHub/HighlandDanceResults.github.io/assets/',
+           assets_folder='/Users/ewood/Documents/GitHub/HighlandDanceResults.github.io/assets/',
            title="Highland Dance Results",
            prevent_initial_callbacks=True)
 print(app.config)
@@ -110,14 +110,18 @@ cards = dbc.Container(
                 dbc.CardHeader(html.B("Results")),
                 dbc.CardBody([
                     dcc.Markdown('''Please select year, competition, and age group first.''', id = 'data-markdown'),
-                    dash_table.DataTable(id = 'table',
+                    html.Center(dash_table.DataTable(id = 'table',
                         sort_action = 'native',
+                        # style_data = {'height':'auto', 'width':'auto'},
                         style_data_conditional = DATA_TABLE_STYLE.get("style_data_conditional"),
                         style_header=DATA_TABLE_STYLE.get("style_header"),
                         style_cell = {'textAlign': 'center'},
-                        style_table={'overflowX': 'auto'},
+                        style_table={'overflowX': 'auto',
+                            # 'minHeight': '100vh', 'height': '100vh', 'maxHeight': '100vh',
+                            'minWidth': '90vw', 'width': '90vw', 'maxWidth': '90vw'
+                                     },
                         fixed_columns={'headers': True, 'data': 1}
-                                         ),
+                    )),
                     dcc.Graph(id = 'graph',
                         figure={
                             'data': [],
@@ -239,7 +243,6 @@ app.clientside_callback(
                     'yanchor': "bottom",
                     'yref': "container"},
                 'margin': {l:15, r:0}
-                
             }
         };
 
@@ -306,4 +309,4 @@ app.clientside_callback(
 
 # Run the app
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run(debug=False)
