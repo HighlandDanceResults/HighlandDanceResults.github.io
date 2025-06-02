@@ -230,7 +230,10 @@ app.clientside_callback(
         const graph_data = {
             'data': figure_data,
             'layout': {
-                'yaxis': {autorange: 'reversed'}
+                'yaxis': {autorange: 'reversed'},
+                'legend': {'orientation': 'h'},
+                'margin': {l:0, r:0}
+                
             }
         };
 
@@ -243,7 +246,7 @@ app.clientside_callback(
             * Sort table by clicking up/down arrows next to column titles
             * Click on graph points for more info
 
-            
+
             ` + '**'+ data_markdown +'**'
         
         return [graph_data, table_data, df_chosen, data_markdown];
