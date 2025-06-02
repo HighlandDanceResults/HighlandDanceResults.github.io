@@ -72,20 +72,20 @@ top_card = [
             ''')
     ]),
     dbc.CardBody([
-        dbc.Row([
-            dbc.Col([
+        dbc.Col([
+            dbc.Row([
                 dcc.Markdown('''**1) Choose Year**'''),
                 dcc.Dropdown(dropdown_labels, id= 'year_dropdown', searchable=False,
                              optionHeight=50
                              )
             ]),
-            dbc.Col([
+            dbc.Row([
                 dcc.Markdown('''**2) Choose Compeititon**'''),
                 dcc.Dropdown('', id= 'comp_dropdown', searchable=False,
                              optionHeight=50, style = {'white-space': 'nowrap', 'position': 'initial'}
                 )
             ]),
-            dbc.Col([
+            dbc.Row([
                 dcc.Markdown('''**3) Choose Age Group**'''),
                 dcc.Dropdown('', id= 'age_dropdown', searchable=False,
                              optionHeight=50
