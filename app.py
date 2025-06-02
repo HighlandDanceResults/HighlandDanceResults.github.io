@@ -87,9 +87,8 @@ cards = dbc.Container(
                 , style = {"margin-bottom": "0.5em"}),
         dbc.Row(
             dbc.Card([
-                dbc.CardHeader("Results"),
+                dbc.CardHeader(html.B("Results - Select Data First")),
                 dbc.CardBody([
-                    'Please select options first...',
                     dcc.Graph(id = 'graph')
                     # dbc.Row(table_card),
                     # dbc.Row(plot_card)
@@ -182,8 +181,12 @@ app.clientside_callback(
         };
 
         const data = {
-            'data': figure_data
-        }
+            'data': figure_data,
+            'layout': {
+                'title': 'Results for ' + year + ' '+ comp + ' ' +age,
+                'yaxis': {autorange: 'reversed'}
+            }
+        };
         
         return data;
     }
