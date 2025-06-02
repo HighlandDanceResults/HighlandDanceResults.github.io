@@ -64,16 +64,6 @@ top_card = [
     dbc.CardBody([
         dcc.Markdown('''            
             Checkout [scotdance.app] (https://scotdance.app/#/competitions/), which also has a mobile app! My website originated as a passion project because some comps do not use the app.
-                     
-
-            ***For use with phones***:
-            * Best with phone turned sideways
-            * Scroll left/right on table for more info
-            * Sort table by clicking up/down arrows next to column titles
-            * Click on graph points for more info
-
-            
-
             ''')
     ]),
     dbc.CardBody([
@@ -244,9 +234,17 @@ app.clientside_callback(
             }
         };
 
-        data_markdown = 'Results for ' + year + ' '+ comp + ' ' +age+':';
+        var data_markdown = 'Results for ' + year + ' '+ comp + ' ' +age+':';
+
+        data_markdown = `  
+            **Viewing Tips:**     
+            * Best with phone turned sideways
+            * Scroll left/right on table for more info
+            * Sort table by clicking up/down arrows next to column titles
+            * Click on graph points for more info
+            ` + '#### '+ data_markdown
         
-        return [graph_data, table_data, df_chosen, '#### '+data_markdown];
+        return [graph_data, table_data, df_chosen, data_markdown];
     }
     """,
     Output('graph', 'figure', allow_duplicate=True),
