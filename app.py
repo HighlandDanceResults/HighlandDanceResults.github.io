@@ -37,7 +37,7 @@ DATA_TABLE_STYLE = {
     ],
     "style_header": {
         "color": "black",
-        "backgroundColor": "#799DBF",
+        "backgroundColor": "#A3C7E8",
         "fontWeight": "bold",
     }
 }
@@ -70,10 +70,10 @@ top_card = [
         html.Br(),
         dbc.Row([
             html.Div([
-                html.Button('Submit', id = 'submit-btn',
+                dbc.Button('Submit', id = 'submit-btn', outline=True, color = 'dark', className="me-1",
                             style = {"backgroundColor": "#e1eaf2"}
                 ),
-                html.Button('Reset Table', id = 'reset-btn',
+                dbc.Button('Reset', id = 'reset-btn', outline=True, color = 'dark', className="me-1",
                             style = {"backgroundColor": "#e1eaf2", "color":"red"}
                 ),
             ], style={'textAlign': 'center'})
@@ -89,7 +89,20 @@ cards = dbc.Container(
             dbc.Card([
                 dbc.CardHeader(html.B("Results - Select Data First")),
                 dbc.CardBody([
-                    dcc.Graph(id = 'graph')
+                    dash_table.DataTable(id = 'table',
+                        sort_action = 'native',
+                        style_data_conditional = DATA_TABLE_STYLE.get("style_data_conditional"),
+                        style_header=DATA_TABLE_STYLE.get("style_header"),
+                        style_cell = {'textAlign': 'center'},
+                                         ),
+                    dcc.Graph(id = 'graph',
+                        figure={
+                            'data': [],
+                            'layout': go.Layout(                                
+                                xaxis =  {'showgrid': False, 'zeroline': False, 'ticks':'', 'showticklabels':False},
+                                yaxis = {'showgrid': False, 'zeroline': False, 'ticks':'', 'showticklabels':False}                                                               
+                                )
+                            })
                     # dbc.Row(table_card),
                     # dbc.Row(plot_card)
                 ],id = 'table_card')
@@ -110,6 +123,7 @@ cards = dbc.Container(
 
 app.layout = html.Div([
     dcc.Store(id='df_store', data=df.to_dict('records')),
+    dcc.Store(id='df_chosen', data=[]),
     navbar,
     cards
 ])
@@ -153,6 +167,7 @@ app.clientside_callback(
         if (n_clicks < 1) return [];
 
         const drop_list = ["Competition", "Year", "Age Group", "Number", "Overall"];
+        const drop_list_for_table = ["Competition", "Year", "Age Group"];
 
         const df_chosen = df.filter(row => row.Year == year && row.Competition == comp && row["Age Group"] == age);
 
@@ -160,6 +175,16 @@ app.clientside_callback(
             const newRow = {};
             for (const key in row) {
                 if (!drop_list.includes(key)) {
+                    newRow[key] = row[key];
+                }
+            }
+            return newRow;
+        });
+
+        var table_data = df_chosen.map(function(row) {
+            const newRow = {};
+            for (const key in row) {
+                if (!drop_list_for_table.includes(key)) {
                     newRow[key] = row[key];
                 }
             }
@@ -180,18 +205,22 @@ app.clientside_callback(
 
         };
 
-        const data = {
+        const graph_data = {
             'data': figure_data,
             'layout': {
                 'title': 'Results for ' + year + ' '+ comp + ' ' +age,
                 'yaxis': {autorange: 'reversed'}
             }
         };
+
+
         
-        return data;
+        return [graph_data, table_data, df_chosen];
     }
     """,
     Output('graph', 'figure', allow_duplicate=True),
+    Output('table', 'data', allow_duplicate=True),
+    Output('df_chosen', 'data', allow_duplicate=True),
     Input('submit-btn', 'n_clicks'),
     State('year_dropdown', 'value'),
     State('comp_dropdown', 'value'),
@@ -199,6 +228,33 @@ app.clientside_callback(
     State('df_store', 'data'),
     prevent_initial_call=True
 )
+
+
+# resetting graph and table
+app.clientside_callback(
+    """
+    function(n_clicks) {
+
+        const empty_graph = {
+            'data': [],
+            'layout': {'xaxis': {'showgrid': false,
+                'showticklabels': false,
+                'ticks': '',
+                'zeroline': false},
+                'yaxis': {'showgrid': false,
+                'showticklabels': false,
+                'ticks': '',
+                'zeroline': false}}};
+
+        return [[], empty_graph];
+    }
+    """,
+    Output('table', 'data', allow_duplicate=True),
+    Output('graph', 'figure', allow_duplicate=True),
+    Input('reset-btn', 'n_clicks'),
+    prevent_initial_call=True
+)
+
 
 
 
