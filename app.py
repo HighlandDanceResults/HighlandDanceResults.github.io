@@ -26,10 +26,9 @@ app = Dash(__name__,
            assets_folder='/Users/ewood/Documents/GitHub/HighlandDanceResults.github.io/assets/',
            title="Highland Dance Results",
            prevent_initial_callbacks=True)
-print(app.config)
 
-DATA_TABLE_STYLE = {
-    "style_data_conditional": [
+def table_style_data_conditional(df_chosen):
+    styles = [
         {"if": {"column_id": "Overall"}, "backgroundColor": "#e1eaf2"},
         {
             'if': {'row_index': 'odd'},
@@ -39,7 +38,15 @@ DATA_TABLE_STYLE = {
             'if': {'column_id': 'Name'},
             'textAlign': 'left'
         }
-    ],
+    ]
+
+    return styles
+
+
+
+
+DATA_TABLE_STYLE = {
+    "style_data_conditional": table_style_data_conditional(dcc.Store(id='df_chosen', data=[])),
     "style_header": {
         "color": "black",
         "backgroundColor": "#A3C7E8",
@@ -193,7 +200,7 @@ app.clientside_callback(
     function(n_clicks, year, comp, age, df) {
         if (n_clicks < 1) return [];
 
-        const drop_list = ["Competition", "Year", "Age Group", "Number", "Overall"];
+        const drop_list = ["Competition", "Year", "Age Group", "Number"];
         const drop_list_for_table = ["Competition", "Year", "Age Group"];
 
         const df_chosen = df.filter(row => row.Year == year && row.Competition == comp && row["Age Group"] == age);
@@ -227,6 +234,8 @@ app.clientside_callback(
                 {'name': placings[i][0],
                 'x': chosen_dances.slice(1),
                 'y': placings[i].slice(1),
+                'marker': {'symbol':'cirlce',
+                    'size':12},
                 'type': 'scatter'}
             );
 
@@ -242,7 +251,8 @@ app.clientside_callback(
                     'y':0,
                     'yanchor': "bottom",
                     'yref': "container"},
-                'margin': {l:15, r:0}
+                'margin': {l:15, r:0},
+                'hovermode':'x',
             }
         };
 
