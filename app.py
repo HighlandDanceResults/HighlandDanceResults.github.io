@@ -77,24 +77,40 @@ top_card = [
         dbc.Col([
             dbc.Row([
                 dcc.Markdown('''**1) Choose Year**'''),
-                dcc.Dropdown(dropdown_labels, id= 'year_dropdown', searchable=False,
-                             optionHeight=50
+                dcc.Dropdown(dropdown_labels,
+                             id= 'year_dropdown',
+                             searchable=False,
+                             optionHeight=50,
+                             placeholder= 'Select Year'
                              )
+
             ]),
+        ])]),
+    dbc.CardBody([
+        dbc.Col([
             dbc.Row([
                 dcc.Markdown('''**2) Choose Competition**'''),
-                dcc.Dropdown('', id= 'comp_dropdown', searchable=False,
-                             optionHeight=50, style = {'white-space': 'nowrap', 'position': 'initial'}
-                )
+                dcc.Dropdown('',
+                             id= 'comp_dropdown',
+                             searchable=False,
+                             optionHeight=50,
+                             style = {'white-space': 'nowrap', 'position': 'initial'},
+                            placeholder= 'Select Competition'
+                ),
             ]),
+        ])]),
+    dbc.CardBody([
+        dbc.Col([
             dbc.Row([
                 dcc.Markdown('''**3) Choose Age Group**'''),
-                dcc.Dropdown('', id= 'age_dropdown', searchable=False,
-                             optionHeight=50
-                )
+                dcc.Dropdown('',
+                             id= 'age_dropdown',
+                             searchable=False,
+                             optionHeight=50,
+                            placeholder= 'Select Age Group'
+                ),
             ])
         ]),
-        html.Br(),
         dbc.Row([
             html.Div([
                 dbc.Button('Submit', id = 'submit-btn', outline=True, color = 'dark', className="me-1",
@@ -255,6 +271,7 @@ app.clientside_callback(
                     'yref': "container"},
                 'margin': {l:15, r:0},
                 'hovermode':'x',
+                'title' : {'text':'Results for Dancers For Each Dance'}
             }
         };
 
