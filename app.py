@@ -245,8 +245,10 @@ app.clientside_callback(
             'data': figure_data,
             'layout': {
                 'yaxis': {autorange: 'reversed',
-                    'side':'left'},
-                'xaxis': {'side': 'top',},
+                    'side':'left',
+                    'fixedrange':true},
+                'xaxis': {'side': 'top',
+                    'fixedrange':true},
                 'legend': {'orientation': 'h',
                     'y':0,
                     'yanchor': "bottom",
