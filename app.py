@@ -29,10 +29,10 @@ app = Dash(__name__,
 
 def table_style_data_conditional(df_chosen):
     styles = [
-        {"if": {"column_id": "Overall"}, "backgroundColor": "#e1eaf2"},
+        {"if": {"column_id": "Overall"}, "backgroundColor": "#f9f9f9"},
         {
             'if': {'row_index': 'odd'},
-            'backgroundColor': '#e1eaf2',
+            'backgroundColor': "#f9f9f9",
         },
         {
             'if': {'column_id': 'Name'},
@@ -49,7 +49,7 @@ DATA_TABLE_STYLE = {
     "style_data_conditional": table_style_data_conditional(dcc.Store(id='df_chosen', data=[])),
     "style_header": {
         "color": "black",
-        "backgroundColor": "#A3C7E8",
+        "backgroundColor": "#E6E6E6",
         "fontWeight": "bold",
     }
 }
@@ -112,8 +112,8 @@ top_card = [
             ])
         ]),
         dbc.Row([
-            html.Div([
-                dbc.Button('Submit', id = 'submit-btn', outline=True, color = 'dark', className="me-1",
+            dbc.CardBody([
+                dbc.Button('Submit', id = 'submit_btn', outline=True, color = 'dark', className="me-1",
                             style = {"backgroundColor": "#e1eaf2"}
                 ),
                 dbc.Button('Reset', id = 'reset-btn', outline=True, color = 'dark', className="me-1",
@@ -133,18 +133,23 @@ cards = dbc.Container(
                 dbc.CardHeader(html.B("Results")),
                 dbc.CardBody([
                     dcc.Markdown('''Please select year, competition, and age group first.''', id = 'data-markdown'),
-                    html.Center(dash_table.DataTable(id = 'table',
-                        sort_action = 'native',
-                        # style_data = {'height':'auto', 'width':'auto'},
-                        style_data_conditional = DATA_TABLE_STYLE.get("style_data_conditional"),
-                        style_header=DATA_TABLE_STYLE.get("style_header"),
-                        style_cell = {'textAlign': 'center'},
-                        style_table={'overflowX': 'auto',
-                            # 'minHeight': '100vh', 'height': '100vh', 'maxHeight': '100vh',
-                            'minWidth': '90vw', 'width': '90vw', 'maxWidth': '90vw'
-                                     },
-                        fixed_columns={'headers': True, 'data': 1}
-                    )),
+                    html.Center([
+                        dcc.Markdown('', id = 'table_title'),
+                        dash_table.DataTable(id = 'table',
+                            style_as_list_view=True,
+                            sort_action = 'native',
+                            style_data_conditional = DATA_TABLE_STYLE.get("style_data_conditional"),
+                            style_header=DATA_TABLE_STYLE.get("style_header"),
+                            style_cell = {'textAlign': 'center',
+                                          'font-family':'sans-serif'},
+                            style_table={'overflowX': 'auto',
+                                'minWidth': '90vw', 'width': '90vw', 'maxWidth': '90vw'
+                                        },
+                            fixed_columns={'headers': True, 'data': 1},
+                    )]),
+                ]),
+                dbc.CardBody([
+                    html.Center(dcc.Markdown('', id = 'graph_title')),
                     dcc.Graph(id = 'graph',
                         figure={
                             'data': [],
@@ -155,7 +160,7 @@ cards = dbc.Container(
                             })
                     # dbc.Row(table_card),
                     # dbc.Row(plot_card)
-                ],id = 'table_card')
+                ])
             ], style= {"padding": "0px", "margin-bottom": "0.5em"})
         ),
         dbc.Row(
@@ -209,6 +214,7 @@ app.clientside_callback(
     State('df_store', 'data'),
     prevent_initial_call=True
 )
+
 
 # table card
 app.clientside_callback(
@@ -269,32 +275,42 @@ app.clientside_callback(
                     'y':0,
                     'yanchor': "bottom",
                     'yref': "container"},
-                'margin': {l:15, r:0},
+                'margin': {l:15, r:0, t:0},
                 'hovermode':'x',
-                'title' : {'text':'Results for Dancers For Each Dance'}
+                //'title' : {'text':'Results for Dancers For Each Dance'}
             }
         };
 
-        var data_markdown = 'Results for ' + year + ' '+ comp + ' ' +age+':';
+        var selected_data = 'Results for ' + year + ' '+ comp + ' ' +age+':';
 
-        data_markdown = `  
+        tips = `  
             **Viewing Tips:**     
-            * Best with phone turned sideways
-            * Scroll left/right on table for more info
-            * Sort table by clicking up/down arrows next to column titles
-            * Click on graph points for more info
+            * Turn phone sideways
+            * Table Tip - Scroll left/right
+            * Table Tip - Sort by clicking up/down arrows on column titles
+            * Graph Tip - Click on graph points for more info
+            * Graph Tip - Double click on dancer name in legend to view individual results
+            `
 
-
-            ` + '**'+ data_markdown +'**'
+        var table_title = '**'+ 'Table ' + selected_data +'**'
+        var graph_title = '**'+ 'Plotted ' + selected_data +'**'
         
-        return [graph_data, table_data, df_chosen, data_markdown];
+        return [graph_data,
+            table_data,
+            df_chosen,
+            tips,
+            table_title,
+            graph_title];
     }
     """,
     Output('graph', 'figure', allow_duplicate=True),
     Output('table', 'data', allow_duplicate=True),
     Output('df_chosen', 'data', allow_duplicate=True),
     Output('data-markdown', 'children', allow_duplicate=True),
-    Input('submit-btn', 'n_clicks'),
+    Output('table_title', 'children'),
+    Output('graph_title', 'children'),
+
+    Input('submit_btn', 'n_clicks'),
     State('year_dropdown', 'value'),
     State('comp_dropdown', 'value'),
     State('age_dropdown', 'value'),
@@ -319,7 +335,7 @@ app.clientside_callback(
                 'ticks': '',
                 'zeroline': false}}};
 
-        return [[], empty_graph, [], [], [], []];
+        return [[], empty_graph, [], [], [], [], [], []];
     }
     """,
     Output('table', 'data', allow_duplicate=True),
@@ -328,6 +344,8 @@ app.clientside_callback(
     Output('year_dropdown', 'value', allow_duplicate=True),
     Output('comp_dropdown', 'value', allow_duplicate=True),
     Output('age_dropdown', 'value', allow_duplicate=True),
+    Output('table_title', 'children', allow_duplicate=True),
+    Output('graph_title', 'children', allow_duplicate=True),
 
     Input('reset-btn', 'n_clicks'),
     prevent_initial_call=True
