@@ -13,169 +13,24 @@ import plotly.graph_objs as go
 import plotly.express as px
 import os
 import dash_bootstrap_templates 
+from app_layout import navbar, cards, dancer_search_card, competition_card
 
 data = pd.read_csv('./data/data.csv', keep_default_na=False)
 df = pd.DataFrame(data)
 df.drop(df.columns[df.columns.str.contains('unnamed', case=False)], axis=1, inplace=True)
 df = df.replace('', np.NaN)
 
+year_dropdown_labels = list(df['Year'].unique())
+name_dropdown_labels = list(df['Name'].unique())
+
 
 app = Dash(__name__,
            external_stylesheets=[dbc.themes.BOOTSTRAP],
-        #    assets_url_path='http://127.0.0.1:8050/assets',
            assets_folder='/Users/ewood/Documents/GitHub/HighlandDanceResults.github.io/assets/',
            title="Highland Dance Results",
            prevent_initial_callbacks=True)
 
-def table_style_data_conditional(df_chosen):
-    styles = [
-        {"if": {"column_id": "Overall"}, "backgroundColor": "#f9f9f9"},
-        {
-            'if': {'row_index': 'odd'},
-            'backgroundColor': "#f9f9f9",
-        },
-        {
-            'if': {'column_id': 'Name'},
-            'textAlign': 'left'
-        }
-    ]
-
-    return styles
-
-
-
-
-DATA_TABLE_STYLE = {
-    "style_data_conditional": table_style_data_conditional(dcc.Store(id='df_chosen', data=[])),
-    "style_header": {
-        "color": "black",
-        "backgroundColor": "#E6E6E6",
-        "fontWeight": "bold",
-    }
-}
-
-
-### --- PAGE LAYOUT --- ###
-navbar = html.Div(dbc.Card([
-    dbc.CardHeader(
-        html.Center(dcc.Markdown('''# Unofficial Highland Dance Results'''))
-        ),
-    ]),
-                  style = {"margin-bottom": "0.3em"})
-
-
-dropdown_labels = list(df['Year'].unique())
-
-top_card = [
-    dbc.CardHeader(html.B("Select Data")),
-    dbc.CardBody([
-        dcc.Markdown('''            
-            Checkout [scotdance.app] (https://scotdance.app/#/competitions/), which also has a mobile app! My website originated as a passion project because some comps do not use the app.
-            ''')
-    ]),
-    dbc.CardBody([
-        dbc.Col([
-            dbc.Row([
-                dcc.Markdown('''**1) Choose Year**'''),
-                dcc.Dropdown(dropdown_labels,
-                             id= 'year_dropdown',
-                             searchable=False,
-                             optionHeight=50,
-                             placeholder= 'Select Year'
-                             )
-
-            ]),
-        ])]),
-    dbc.CardBody([
-        dbc.Col([
-            dbc.Row([
-                dcc.Markdown('''**2) Choose Competition**'''),
-                dcc.Dropdown('',
-                             id= 'comp_dropdown',
-                             searchable=False,
-                             optionHeight=50,
-                             style = {'white-space': 'nowrap', 'position': 'initial'},
-                            placeholder= 'Select Competition'
-                ),
-            ]),
-        ])]),
-    dbc.CardBody([
-        dbc.Col([
-            dbc.Row([
-                dcc.Markdown('''**3) Choose Age Group**'''),
-                dcc.Dropdown('',
-                             id= 'age_dropdown',
-                             searchable=False,
-                             optionHeight=50,
-                            placeholder= 'Select Age Group'
-                ),
-            ])
-        ]),
-        dbc.Row([
-            dbc.CardBody([
-                dbc.Button('Submit', id = 'submit_btn', outline=True, color = 'dark', className="me-1",
-                            style = {"backgroundColor": "#e1eaf2"}
-                ),
-                dbc.Button('Reset', id = 'reset-btn', outline=True, color = 'dark', className="me-1",
-                            style = {"backgroundColor": "#e1eaf2", "color":"red"}
-                ),
-            ], style={'textAlign': 'center'})
-        ])
-    ])
-]
-
-cards = dbc.Container(
-    dbc.Col([
-        dbc.Row(dbc.Card(top_card, style= {"padding": "0px"})
-                , style = {"margin-bottom": "0.5em"}),
-        dbc.Row(
-            dbc.Card([
-                dbc.CardHeader(html.B("Results")),
-                dbc.CardBody([
-                    dcc.Markdown('''Please select year, competition, and age group first.''', id = 'data-markdown'),
-                    html.Center([
-                        dcc.Markdown('', id = 'table_title'),
-                        dash_table.DataTable(id = 'table',
-                            style_as_list_view=True,
-                            sort_action = 'native',
-                            style_data_conditional = DATA_TABLE_STYLE.get("style_data_conditional"),
-                            style_header=DATA_TABLE_STYLE.get("style_header"),
-                            style_cell = {'textAlign': 'center',
-                                          'font-family':'sans-serif'},
-                            style_table={'overflowX': 'auto',
-                                'minWidth': '90vw', 'width': '90vw', 'maxWidth': '90vw'
-                                        },
-                            fixed_columns={'headers': True, 'data': 1},
-                    )]),
-                ]),
-                dbc.CardBody([
-                    html.Center(dcc.Markdown('', id = 'graph_title')),
-                    dcc.Graph(id = 'graph',
-                        figure={
-                            'data': [],
-                            'layout': go.Layout(                                
-                                xaxis =  {'showgrid': False, 'zeroline': False, 'ticks':'', 'showticklabels':False},
-                                yaxis = {'showgrid': False, 'zeroline': False, 'ticks':'', 'showticklabels':False}                                                               
-                                )
-                            })
-                    # dbc.Row(table_card),
-                    # dbc.Row(plot_card)
-                ])
-            ], style= {"padding": "0px", "margin-bottom": "0.5em"})
-        ),
-        dbc.Row(
-            dbc.Card([
-                dbc.CardHeader("Contact Us :)"),
-                dbc.CardBody([
-                    'Email me with results or corrections at highlanddanceresults@gmail.com'
-                ],id = 'contact_card')
-            ], style= {"padding": "0px", "margin-bottom": "0.5em"}),
-        )
-    ])
-, fluid=True, style= {"height": "80vh"})
                 
-
-
 app.layout = html.Div([
     dcc.Store(id='df_store', data=df.to_dict('records')),
     dcc.Store(id='df_chosen', data=[]),
@@ -184,6 +39,13 @@ app.layout = html.Div([
 ])
 
 ### --- POPULATING DROP DOWNS --- ###
+@app.callback(Output("selected_tab_card", "children"), [Input("tabs", "active_tab")])
+def tab_content(active_tab):
+    if active_tab == 'comp_tab':
+        return competition_card
+    elif active_tab == 'search_tab':
+        return dancer_search_card
+
 # Populate Competition based on Year
 app.clientside_callback(
     """
@@ -306,7 +168,7 @@ app.clientside_callback(
     Output('graph', 'figure', allow_duplicate=True),
     Output('table', 'data', allow_duplicate=True),
     Output('df_chosen', 'data', allow_duplicate=True),
-    Output('data-markdown', 'children', allow_duplicate=True),
+    Output('data_markdown', 'children', allow_duplicate=True),
     Output('table_title', 'children'),
     Output('graph_title', 'children'),
 
@@ -340,18 +202,16 @@ app.clientside_callback(
     """,
     Output('table', 'data', allow_duplicate=True),
     Output('graph', 'figure', allow_duplicate=True),
-    Output('data-markdown', 'children', allow_duplicate=True),
+    Output('data_markdown', 'children', allow_duplicate=True),
     Output('year_dropdown', 'value', allow_duplicate=True),
     Output('comp_dropdown', 'value', allow_duplicate=True),
     Output('age_dropdown', 'value', allow_duplicate=True),
     Output('table_title', 'children', allow_duplicate=True),
     Output('graph_title', 'children', allow_duplicate=True),
 
-    Input('reset-btn', 'n_clicks'),
+    Input('reset_btn', 'n_clicks'),
     prevent_initial_call=True
 )
-
-
 
 
 # Run the app
