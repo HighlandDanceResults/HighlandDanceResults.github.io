@@ -34,17 +34,41 @@ app = Dash(__name__,
 app.layout = html.Div([
     dcc.Store(id='df_store', data=df.to_dict('records')),
     dcc.Store(id='df_chosen', data=[]),
+    dcc.Store(id='competition_cards_store', data=competition_card),
+    dcc.Store(id='dancer_search_card_store', data=dancer_search_card),
     navbar,
     cards
 ])
 
 ### --- POPULATING DROP DOWNS --- ###
-@app.callback(Output("selected_tab_card", "children"), [Input("tabs", "active_tab")])
-def tab_content(active_tab):
-    if active_tab == 'comp_tab':
-        return competition_card
-    elif active_tab == 'search_tab':
-        return dancer_search_card
+app.clientside_callback(
+    """
+    function(active_tab, competition_cards_store, dancer_search_card_store) {
+        if (active_tab == 'comp_tab'){
+            return competition_cards_store;
+        } 
+        if (active_tab == 'search_tab'){
+            return dancer_search_card_store;
+        }
+    }
+    """,
+    Output("selected_tab_card", "children"),
+    [Input("tabs", "active_tab"),
+    State("competition_cards_store", "data"),
+    State("dancer_search_card_store", "data")
+    ]
+)
+# @app.callback(
+#         Output("selected_tab_card", "children"),
+#         [Input("tabs", "active_tab"),
+#          State("competition_cards_store", "data"),
+#          State("dancer_search_card_store", "data")
+#          ])
+# def tab_content(active_tab, competition_cards_store, dancer_search_card_store):
+#     if active_tab == 'comp_tab':
+#         return competition_cards_store
+#     elif active_tab == 'search_tab':
+#         return dancer_search_card_store
 
 # Populate Competition based on Year
 app.clientside_callback(
