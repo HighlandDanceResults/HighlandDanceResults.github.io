@@ -38,14 +38,14 @@ info_card = dbc.Card([
     ]),
 ], style= {"padding": "0px"})
 
-select_data_card = [html.B("Select Data"),
+select_data_card = [html.B("Select Tab"),
             dbc.Tabs(
                 [
-                    dbc.Tab(label="View Competition Results", tab_id="comp_tab", label_style={"color": "#000000"}),
-                    dbc.Tab(label="View Individual Results", tab_id="search_tab", label_style={"color": "#000000"}),
+                    dbc.Tab(label="Comp. Search", tab_id="comp_tab", label_style={"color": "#000000"}),
+                    dbc.Tab(label="Dancer Search", tab_id="search_tab", label_style={"color": "#000000"}),
                 ],
             id="tabs",
-            active_tab="comp_tab",
+            active_tab="comp_tab"
         )]
 
 dancer_search_card = [
@@ -109,7 +109,7 @@ competition_card = [
         ]),
         dbc.Row([
             dbc.CardBody([
-                dbc.Button('Submit', id = 'submit_btn', outline=True, color = 'dark', className="me-1",
+                dbc.Button('Submit', id = 'comp_submit_btn', outline=True, color = 'dark', className="me-1",
                             style = {"backgroundColor": "#e1eaf2"}
                 ),
                 dbc.Button('Reset', id = 'reset_btn', outline=True, color = 'dark', className="me-1",

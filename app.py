@@ -196,7 +196,7 @@ app.clientside_callback(
     Output('table_title', 'children'),
     Output('graph_title', 'children'),
 
-    Input('submit_btn', 'n_clicks'),
+    Input('comp_submit_btn', 'n_clicks'),
     State('year_dropdown', 'value'),
     State('comp_dropdown', 'value'),
     State('age_dropdown', 'value'),
