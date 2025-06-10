@@ -42,31 +42,31 @@ select_data_card = [html.B("Select Tab"),
             dbc.Tabs(
                 [
                     dbc.Tab(label="Comp. Search", tab_id="comp_tab", label_style={"color": "#000000"}),
-                    dbc.Tab(label="Dancer Search", tab_id="search_tab", label_style={"color": "#000000"}),
+                    # dbc.Tab(label="Dancer Search", tab_id="search_tab", label_style={"color": "#000000"}),
                 ],
             id="tabs",
             active_tab="comp_tab"
         )]
 
-dancer_search_card = [
-    dbc.CardBody([
-        dbc.Col([
-            dbc.Row([
-                dcc.Markdown('''
-                    **Choose/Search Dancer Name**
+# dancer_search_card = [
+#     dbc.CardBody([
+#         dbc.Col([
+#             dbc.Row([
+#                 dcc.Markdown('''
+#                     **Choose/Search Dancer Name**
                              
-                    Select name from list or type in dancer name. Click on desired name.
-                '''),
-                dcc.Dropdown(name_dropdown_labels,
-                            id= 'name_dropdown',
-                            searchable=True,
-                            optionHeight=50,
-                            placeholder= 'Type in or Select Dancer Name'
-                            )
-            ]),
-        ])
-    ]),
-]
+#                     Select name from list or type in dancer name. Click on desired name.
+#                 '''),
+#                 dcc.Dropdown(name_dropdown_labels,
+#                             id= 'name_dropdown',
+#                             searchable=True,
+#                             optionHeight=50,
+#                             placeholder= 'Type in or Select Dancer Name'
+#                             )
+#             ]),
+#         ])
+#     ]),
+# ]
 
 competition_card = [
     dbc.CardBody([
